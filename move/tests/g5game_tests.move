@@ -4,8 +4,9 @@ module g5game::G5Game_tests {
     use sui::coin::{Self};
     use sui::sui::SUI;
     use sui::test_scenario;
-
-
+  
+ use std::debug;
+    use std::string::{String,utf8};
 
     #[test]
     public fun casino_tests() {
@@ -19,6 +20,13 @@ module g5game::G5Game_tests {
         test_scenario::next_tx(scenario, owner);
         {
             G5Game_core::init_for_testing(test_scenario::ctx(scenario));
+            
+            let greet:String = utf8(b"Welcome to G5Game Casino!");
+            debug::print(&greet); // [debug] 0x486f6c61206d756e646f
+            // which is equivalent to:
+            debug::print(&b"test"); // [debug] 0x486f6c61206d756e646f
+
+
         };
         test_scenario::next_tx(scenario, player);
         {
