@@ -1,4 +1,4 @@
-module g5game::Suizino_core {
+module g5game::G5Game_core {
     // Part 1: imports
     use sui::object::{Self, ID, UID};
     use sui::transfer;
@@ -11,7 +11,7 @@ module g5game::Suizino_core {
     use std::vector;
     use sui::event;
 
-    /// User doesn't have enough coins to play a round on the suizino
+    /// User doesn't have enough coins to play a round on the G5Game
     const ENotEnoughMoney: u64 = 1;
     const EOutOfService: u64 = 2;
 
@@ -43,14 +43,14 @@ module g5game::Suizino_core {
         slot_3: u8
     }
 
-    // initialize our Suizino
+    // initialize our G5Game
     fun init(ctx: &mut TxContext) {
         transfer::transfer(CasinoOwnership{id: object::new(ctx)}, tx_context::sender(ctx));
 
         transfer::share_object(Casino {
             id: object::new(ctx),
-            name: string::utf8(b"Suizino"),
-            description: string::utf8(b"A small unsafe Suizino. Created by Manolis Liolios"),
+            name: string::utf8(b"group5ino"),
+            description: string::utf8(b"A small unsafe group5ino. Inspired by Manolis Liolios SUIZINO used  part of the group5 MoveCamp."),
             cost_per_game: 5000,
             casino_balance: balance::zero()
         });
@@ -173,10 +173,11 @@ module g5game::Suizino_core {
         vec
     }
 
-
-
     #[test_only]
     public fun init_for_testing(ctx: &mut TxContext) {
         init(ctx);
     }
+
+
+    
 }
