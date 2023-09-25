@@ -1,4 +1,4 @@
-module mliolios::Suizino_core {
+module g5game::Suizino_core {
     // Part 1: imports
     use sui::object::{Self, ID, UID};
     use sui::transfer;
