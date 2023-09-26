@@ -5,6 +5,7 @@ module g5game::G5Game_core {
     use sui::sui::SUI;
     use sui::balance::{Self, Balance};
     use sui::tx_context::{Self, TxContext};
+
     // Use this dependency to get a type wrapper for UTF-8 strings
     use std::string::{Self, String};
     use sui::coin::{Self, Coin};
@@ -45,18 +46,22 @@ module g5game::G5Game_core {
 
     // initialize our G5Game
     fun init(ctx: &mut TxContext) {
+
+        // transfers owner capabilites to the sender of the transaction.
         transfer::transfer(CasinoOwnership{id: object::new(ctx)}, tx_context::sender(ctx));
 
+        // create a new casino
         transfer::share_object(Casino {
             id: object::new(ctx),
             name: string::utf8(b"group5ino"),
-            description: string::utf8(b"A small unsafe group5ino. Inspired by Manolis Liolios SUIZINO used  part of the group5 MoveCamp."),
+            description: string::utf8(b"A small unsafe group5ino. Inspired by Manolis Liolios SUIZINO used  for the group5 MoveCamp."),
             cost_per_game: 5000,
             casino_balance: balance::zero()
         });
 
     }
 
+    // get the cost per game Question: what does self stands for?
     public fun cost_per_game(self: &Casino): u64 {
         self.cost_per_game
     }
@@ -179,5 +184,5 @@ module g5game::G5Game_core {
     }
 
 
-    
+
 }
