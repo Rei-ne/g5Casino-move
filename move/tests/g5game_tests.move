@@ -11,8 +11,11 @@ module g5game::G5Game_tests {
     #[test]
     public fun casino_tests() {
 
-        let owner =  @0x1;
-        let player = @0x2;
+        //let owner =  @0x1;0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497
+        let owner =  @0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497;
+
+        //let player = @0x2;
+        let player = @0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497;
 
         let scenario_val = test_scenario::begin(owner);
         let scenario = &mut scenario_val;
@@ -24,7 +27,7 @@ module g5game::G5Game_tests {
             let greet:String = utf8(b"Welcome to G5Game Casino!");
             debug::print(&greet); // [debug] 0x486f6c61206d756e646f
             // which is equivalent to:
-            debug::print(&b"test"); // [debug] 0x486f6c61206d756e646f
+            debug::print(&utf8(b"test")); // [debug] 0x486f6c61206d756e646f
 
 
         };
@@ -37,7 +40,6 @@ module g5game::G5Game_tests {
             let ctx = test_scenario::ctx(scenario);
             let coinOb = coin::mint_for_testing<SUI>(40000, ctx);
 
-
             // deposit some money on the casino!
             G5Game_core::depositToCasino(&casinoOwnership, &mut casino, 35000, &mut coinOb);
 
@@ -46,6 +48,11 @@ module g5game::G5Game_tests {
             assert!(G5Game_core::cost_per_game(&casino) == 5000, 1);
 
             assert!(balance == 35000, 1); // verify that casino's balance is the one we deposited.
+            
+            //let greet:u64 = balance;
+
+            debug::print(&balance); // [debug] 0x486f6c61206d756e646f
+            debug::print(&utf8(b"test")); // [debug] 0x486f6c61206d756e646f
 
             // gamble the money (5000)
             G5Game_core::gamble(&mut casino, &mut coinOb, ctx); // 1st gamble
