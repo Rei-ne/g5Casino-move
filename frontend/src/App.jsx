@@ -209,7 +209,7 @@ const chainName = (chainId ) => {
       <header>
       </header>
       <h3>
-        Welcome to Game 5 Casino!
+        Welcome to Game 5 Casino! 🎉
       </h3>
       <div className="card">
       <ConnectButton
