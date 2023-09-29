@@ -1,110 +1,61 @@
 import './App.css'
-import {DepositToCasino} from  './components/depositToCasino/depositToCasino';
 
-// const client_id = import.meta.env.VITE_APP_CLIENT_ID
 
 import {
-  ConnectButton, useWallet,  addressEllipsis,  
-  useAccountBalance,
-  SuiChainId,
-  ErrorCode,
-  formatSUI
+  ConnectButton, useWallet,
 } from '@suiet/wallet-kit';
-import '@suiet/wallet-kit/style.css';
-import * as tweetnacl from 'tweetnacl'
-import {TransactionBlock, fromB64} from '@mysten/sui.js'
-import {useMemo} from "react";
 
-const OwnerCap='0xcfce2f7fe28f10949036ab67e1ba1a89df341d02bdb92c7dda5195b85afcf683';
-const Casino = new Map([
-  ['sui:devnet', '0x5a64d469ff0e39a2dd86d295bf268fd6ccb4474dde6495f5e90e5ef6a4f241e1::G5Game_core'],
-  ['sui:testnet', '0x5a64d469ff0e39a2dd86d295bf268fd6ccb4474dde6495f5e90e5ef6a4f241e1::G5Game_core'],
-  ['sui:mainnet', '0x5a64d469ff0e39a2dd86d295bf268fd6ccb4474dde6495f5e90e5ef6a4f241e1::G5Game_core'],
-])
-
-
-function Mytest (){
-  return <span>a test </span>;
-}
-
+let objectID = "";
 
 const App = () => {
   const wallet = useWallet();
 
+  async function handleSignAndExecuteTx() {
 
-  
-  const {balance} = useAccountBalance();
-  const casinoContractAddr = useMemo(() => {
-    if (!wallet.chain) return '';
-    return Casino.get(wallet.chain.id) ?? '';
-  }, [wallet]);
-
-console.log('casinoContractAddr', casinoContractAddr);
-
-function uint8arrayToHex(value ) {
-  if (!value) return ''
-   return value.toString('hex')
-}
-
-async function handleExecuteMoveCall() {
-  if (!target) return;
-
-  try {
-    const tx = new TransactionBlock()
-    tx.moveCall({
-      target: target ,
-      arguments: [
-        tx.pure('Suiet NFT'),
-        tx.pure('Suiet Sample NFT'),
-        tx.pure('https://xc6fbqjny4wfkgukliockypoutzhcqwjmlw2gigombpp2ynufaxa.arweave.net/uLxQwS3HLFUailocJWHupPJxQsli7aMgzmBe_WG0KC4')
-      ]
-    })
-    const resData = await wallet.signAndExecuteTransactionBlock({
-      transactionBlock: tx,
-    });
-    console.log('executeMoveCall success', resData);
-    alert('executeMoveCall succeeded (see response in the console)');
-  } catch (e) {
-    console.error('executeMoveCall failed', e);
-    alert('executeMoveCall failed (see response in the console)');
-  }
-}
-
-
-async function handleSignMsg() {
-  if (!wallet.account) return
-  try {
-    const msg = 'Hello world!'
-    const msgBytes = new TextEncoder().encode(msg)
-    const result = await wallet.signMessage({
-      message: msgBytes
-    })
-    const verifyResult = await wallet.verifySignedMessage(result, wallet.account.publicKey)
-    console.log('verify signedMessage', verifyResult)
-    if (!verifyResult) {
-      alert(`signMessage succeed, but verify signedMessage failed`)
-    } else {
-      alert(`signMessage succeed, and verify signedMessage succeed!`)
+    console.log("Transacting")
+    if (!wallet.connected) {
+      alert("wallet not connected");
+      return
     }
-  } catch (e) {
-    console.error('signMessage failed', e)
-    alert('signMessage failed (see response in the console)')
-  }
-}
-
-
-
-  const chainName = (chainId ) => {
-    switch (chainId) {
-      case SuiChainId.MAIN_NET:
-        return 'Mainnet'
-      case SuiChainId.TEST_NET:
-        return 'Testnet'
-      case SuiChainId.DEV_NET:
-        return 'Devnet'
-      default:
-        return 'Unknown'
+    try {
+      const resData = await wallet.signAndExecuteTransaction({
+        transaction: {
+          kind: 'moveCall',
+          data: {
+            packageObjectId: '0x2',
+            module: 'devnet_nft',
+            function: 'mint',
+            typeArguments: [],
+            arguments: [
+              "Group5 NFT",
+              "The most trusted wallet in the Move Ecosystem",
+              "https://moveecosystem.com/wp-content/uploads/2022/12/martian.gif"
+            ],
+            gasBudget: 10000,
+          }
+        }
+      });
+      console.log('nft minted successfully!', resData);
+      if (resData.EffectsCert) {
+        objectID = resData?.EffectsCert?.effects?.effects?.created[0]?.reference?.objectId;
+      }
+      else {
+        objectID = resData?.effects?.created[0]?.reference?.objectId;
+      }
+      console.log(objectID);
+    } catch (e) {
+      console.error('nft mint failed', e);
     }
+    const mintAudio = new Audio('../spacesound.wav');
+    mintAudio.play();
+    var url = "https://explorer.sui.io/objects/" + encodeURIComponent(objectID);
+    document.getElementById('mint-btn').style.cssText = `
+      background-color: lightgreen;
+      border-radius: 0;
+    `;
+    document.getElementById('mint-btn').innerHTML = '<p>Success! View NFT <a href="#" id="explorer-link">Here</a></p>'
+    document.getElementById("explorer-link").href = url;
+    document.getElementById('mint-btn').onclick = "";
   }
 
 
@@ -112,58 +63,19 @@ async function handleSignMsg() {
   return (
     <>
       <header>
+        <ConnectButton>Connect Wallet to mint NFT</ConnectButton>
       </header>
       <h3>
         Welcome to Game 5 Casino! 🎉
       </h3>
-      <div className="card">
-      <ConnectButton
-          onConnectError={(error) => {
-            if (error.code === ErrorCode.WALLET__CONNECT_ERROR__USER_REJECTED) {
-              console.warn('user rejected the connection to ' + error.details?.wallet)
-            } else {
-              console.warn('unknown connect error: ', error)
-            }
-          }}
-        />
-     
+      <p>
 
-        {!wallet.connected ? (
-          <p>Connect DApp with Suiet wallet from now!</p>
-        ) : (
-          <div>
-            <div>
-              <p>current wallet: {wallet.adapter?.name}</p>
-              <p>
-                wallet status:{' '}
-                {wallet.connecting
-                  ? 'connecting'
-                  : wallet.connected
-                    ? 'connected'
-                    : 'disconnected'}
-              </p>
-              <p>wallet address: {wallet.account?.address}</p>
-              <p>current network: {wallet.chain?.name}</p>
-              <p>wallet balance: {formatSUI(balance ?? 0, {
-                withAbbr: false
-              })} SUI</p>
-              <p>wallet publicKey: {uint8arrayToHex(wallet.account?.publicKey)}</p>
-            </div>
-            <div className={'btn-group'} style={{margin: '8px 0'}}>
-              {casinoContractAddr && (
-                <button onClick={() => handleExecuteMoveCall(casinoContractAddr)}>Call {chainName(wallet.chain?.id)} fct</button>
-              )}
-              <button onClick={handleSignMsg}>signMessage</button>
-            </div>
-          </div>
-        )}
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and Suiet logos to learn more
+        <span className="gradient">Current chain of wallet: </span>
+        {wallet.chain.name}
+
+
       </p>
-
-
-
+      <button onClick={handleSignAndExecuteTx}>Mint NFT</button>
 
     </>
   )
