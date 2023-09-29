@@ -1,0 +1,26 @@
+
+transaction creation
+
+GMnDDdtdj7iYD2DuNvuY5WtLp5gNsBDUfqtNoVbpoGMN
+
+by 0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497
+
+
+
+
+casino owner
+
+type: 
+0x5a64d469ff0e39a2dd86d295bf268fd6ccb4474dde6495f5e90e5ef6a4f241e1::G5Game_core::CasinoOwnership
+
+address of the cap
+0xcfce2f7fe28f10949036ab67e1ba1a89df341d02bdb92c7dda5195b85afcf683
+
+
+casino
+package
+0x5a64d469ff0e39a2dd86d295bf268fd6ccb4474dde6495f5e90e5ef6a4f241e1
+
+
+0x2::coin::Coin<0x2::sui::SUI>
+

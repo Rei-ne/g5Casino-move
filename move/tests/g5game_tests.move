@@ -11,11 +11,8 @@ module g5game::G5Game_tests {
     #[test]
     public fun casino_tests() {
 
-        //let owner =  @0x1;0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497
-        let owner =  @0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497;
-
-        //let player = @0x2;
-        let player = @0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497;
+        let owner =  @0x1;0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497
+        let player = @0x2;
 
         let scenario_val = test_scenario::begin(owner);
         let scenario = &mut scenario_val;
@@ -59,11 +56,7 @@ module g5game::G5Game_tests {
 
             balance = G5Game_core::casino_balance(&casino);
             assert!(balance != 35000, 1); // verify that casino's balance changed after the gamble (either up or down)
-
             coin::burn_for_testing(coinOb);
-
-
-
             test_scenario::return_shared(casino);
             test_scenario::return_to_address(owner, casinoOwnership);
         };
