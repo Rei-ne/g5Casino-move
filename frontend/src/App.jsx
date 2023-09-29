@@ -1,6 +1,5 @@
 import './App.css'
 
-
 import {
   ConnectButton, useWallet,
 } from '@suiet/wallet-kit';
@@ -8,6 +7,8 @@ import {
 let objectID = "";
 
 const App = () => {
+
+
   const wallet = useWallet();
 
   async function handleSignAndExecuteTx() {
