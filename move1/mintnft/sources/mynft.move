@@ -58,6 +58,14 @@ module 0x0::BasicNFT {
 
     // add a function to create additional admin addresses
 
+public entry fun mint_to_address_no_cap(address_a:address,  name_str:vector<u8>,  description_str:vector<u8>,url_str:vector<u8>,ctx: &mut TxContext) {
+    //public entry fun mint_to_address(address_a:address,  name_str:vector<u8>,  description_str:vector<u8>,url_str:vector<u8>,ctx: &mut TxContext) {
+        let name = string::utf8(name_str);
+        let description = string::utf8(description_str);
+        let url = url::new_unsafe_from_bytes(url_str);
+        let myNFT = create_nft( name,description, url,ctx);
+        transfer::transfer( myNFT, address_a);
+    }
 
 
 
