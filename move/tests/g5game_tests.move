@@ -11,7 +11,7 @@ module g5game::G5Game_tests {
     #[test]
     public fun casino_tests() {
 
-        let owner =  @0x1;0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497
+        let owner =  @0x1;
         let player = @0x2;
 
         let scenario_val = test_scenario::begin(owner);
@@ -38,7 +38,9 @@ module g5game::G5Game_tests {
             let coinOb = coin::mint_for_testing<SUI>(40000, ctx);
 
             // deposit some money on the casino!
-            G5Game_core::depositToCasino(&casinoOwnership, &mut casino, 35000, &mut coinOb);
+           // G5Game_core::depositToCasino(&casinoOwnership, &mut casino, 35000, &mut coinOb);
+
+            G5Game_core::anybodyDepositToCasino( &mut casino, 35000, &mut coinOb);
 
             let balance = G5Game_core::casino_balance(&casino);
 

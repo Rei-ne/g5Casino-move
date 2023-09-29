@@ -141,6 +141,22 @@ module g5game::G5Game_core {
 
     }
 
+
+/* A function for admins to deposit money to the casino so it can still function!  */
+    public entry fun anybodyDepositToCasino(casino :&mut Casino, amount: u64, payment: &mut Coin<SUI>){
+
+        let availableCoins = coin::value(payment);
+        assert!(availableCoins > amount, ENotEnoughMoney);
+
+        let balance = coin::balance_mut(payment);
+
+        let payment = balance::split(balance, amount);
+        balance::join(&mut casino.casino_balance, payment);
+
+    }
+
+
+
     /*
        A function for admins to get their profits.
     */
