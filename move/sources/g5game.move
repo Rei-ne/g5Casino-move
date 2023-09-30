@@ -155,6 +155,14 @@ module g5game::G5Game_core {
 
     }
 
+    public entry fun anybodydoNothing( payment: &mut Coin<SUI>){
+
+        let availableCoins = coin::value(payment);
+        assert!(availableCoins < 1, ENotEnoughMoney);
+
+    }
+
+
 
 
     /*
