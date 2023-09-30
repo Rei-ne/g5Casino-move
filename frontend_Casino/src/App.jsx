@@ -126,53 +126,6 @@ async function DeposittoCasino() {
   }
 
 
-
-
-
-  function getAddress() {
-    if (!wallet.account) return null;
-    return wallet.account.address;
-  }    
-
-
-  // gets the user's object and checks if we have a casino ownership.
-    // We also keep a list of SUI Coin addresses to use for transactions.
-  //   const getUserCasinoOwnershipAndUserCoinAddresses = () => {
-  //     const address = getAddress();
-  //     if(!address) return;
-
-  //     provider.getObjectsOwnedByAddress(address).then(res =>{
-  //         let casinoOwnership = res.find(x => x.type.includes('CasinoOwnership') /*&& x.type.startsWith(moduleAddress)*/);
-  //         if(casinoOwnership){
-  //             console.log('casinoOwnership TRUE', casinoOwnership);
-  //             //authStore.casinoAdmin.isAdmin = true;
-  //             //authStore.casinoAdmin.objectAddress = casinoOwnership.objectId;
-  //         }
-
-  //         let coinAddresses = res.filter(x => x.type.includes('Coin'));
-
-  //         provider.getObjectBatch(coinAddresses.map(x => x.objectId)).then(res=>{
-
-  //             const coins = res.map(x => {
-  //                 return {
-  //                     id: x?.details?.data?.fields?.id?.id,
-  //                     balance: x?.details?.data?.fields?.balance
-  //                 }
-  //             });
-  //             console.log('coins', coins);
-
-  //             //authStore.coins = coins;
-  //         })
-
-  //     }).catch(e =>{ console.log('error', e); });
-  //        // uiStore.setNotification(e.message);
-  //     });
-  // }
-
-
-
-
-
 const chainName = (chainId ) => {
     switch (chainId) {
       case SuiChainId.MAIN_NET:
@@ -187,44 +140,35 @@ const chainName = (chainId ) => {
   }
 
 
-
-
-
-
   async function callGamblefct() {
-    const CREATION_FEE = 1000 * 1e9;
+    
     console.log('callGamblefct 0', wallet)
     if (!wallet.account) return
     console.log('callGamblefct 1', wallet.getAccounts())
-    const target="0xfa5f05f0915dca5757ca7e499e9fa39e61ed354b0fcdee370aa25072e687ccd5::G5Game_core::anybodydoNothing";
+    
+    const target=casinoContractAddr+"::G5Game_core::gamble";
   
-      try {
-        const tx = new TransactionBlock()
-       tx.setGasBudget(100000000);
-      const coin = tx.splitCoins(tx.gas, [tx.pure(50000)]);
+    try {
+      const tx = new TransactionBlock()
+      const coin = tx.splitCoins(tx.gas, [tx.pure(500000000)]);
+      tx.setGasBudget(100000000);
          tx.moveCall({
            target: target,
            arguments: [
-         //   tx.pure( OwnerCap),
-            //tx.pure("0xf0758770c3a1439e873975f5add81d215a3914fba6869b84965b4255bfaa6740"),
+            tx.object(casinoAddress),
             coin
-            //tx.pure("500000"),
-          //  tx.pure("0x23b130490999dee73eac63410117b80c227caf819f897911477b43411460fb9a"),
-            
           ]
         });
-        
-        
-  
+         
   
         const resData = await wallet.signAndExecuteTransactionBlock({
           transactionBlock: tx,
         });
         console.log('executeMoveCall success', resData);
-     //   alert('executeMoveCall succeeded (see response in the console)');
+      //  alert('executeMoveCall succeeded (see response in the console)');
       } catch (e) {
         console.error('executeMoveCall failed', e);
-     //   alert('executeMoveCall failed (see response in the console)');
+      //  alert('executeMoveCall failed (see response in the console)');
       }
     }
   
