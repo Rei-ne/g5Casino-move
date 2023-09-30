@@ -1,0 +1,106 @@
+Y MoveStdlib
+BUILDING g5game
+Skipping dependency verification
+----- Transaction Digest ----
+srDgh1ZTR5UnB3GHTRorXW6ov1WiaBUVpGDcvxbVfmL
+----- Transaction Data ----
+Transaction Signature: [Signature(Ed25519SuiSignature(Ed25519SuiSignature([0, 37, 173, 141, 126, 151, 69, 125, 180, 130, 75, 253, 54, 205, 108, 216, 143, 44, 102, 121, 83, 124, 30, 172, 246, 171, 129, 218, 255, 173, 109, 89, 241, 126, 121, 173, 148, 157, 211, 73, 227, 72, 226, 90, 96, 44, 4, 27, 185, 10, 157, 96, 6, 57, 150, 57, 176, 158, 194, 172, 224, 221, 78, 113, 13, 2, 47, 98, 108, 205, 214, 46, 117, 169, 165, 166, 97, 132, 255, 235, 104, 64, 22, 72, 68, 27, 197, 236, 186, 173, 36, 216, 71, 116, 251, 246, 3])))]
+Transaction Kind : Programmable
+Inputs: [Pure(SuiPureValue { value_type: Some(Address), value: "0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497" })]
+Commands: [
+  Publish(<modules>,0x0000000000000000000000000000000000000000000000000000000000000001,0x0000000000000000000000000000000000000000000000000000000000000002),
+  TransferObjects([Result(0)],Input(0)),
+]
+
+Sender: 0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497
+Gas Payment: Object ID: 0x23b130490999dee73eac63410117b80c227caf819f897911477b43411460fb9a, version: 0x5, digest: 7LMgj1piY5yAUDvAj6x7t8wTx9eQDDToqQd2U9WBHRT5 
+Gas Owner: 0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497
+Gas Price: 1000
+Gas Budget: 1000000000
+
+----- Transaction Effects ----
+Status : Success
+Created Objects:
+  - ID: 0xac4d9c62091570a928124289bfed3bce5f4fd273cae6ef5d6fe341fd52533d1a , Owner: Immutable
+  - ID: 0xd7075159b1d2978d50c91591716d787b6deac942bb133b6e14da0eddb91533ff , Owner: Account Address ( 0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497 )
+  - ID: 0xf0758770c3a1439e873975f5add81d215a3914fba6869b84965b4255bfaa6740 , Owner: Shared
+  - ID: 0xf280dafc26f5e622e2fcbe3707482cc3ce93a4704081e54130151849563aba2a , Owner: Account Address ( 0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497 )
+Mutated Objects:
+  - ID: 0x23b130490999dee73eac63410117b80c227caf819f897911477b43411460fb9a , Owner: Account Address ( 0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497 )
+
+----- Events ----
+Array []
+----- Object changes ----
+Array [
+    Object {
+        "type": String("mutated"),
+        "sender": String("0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497"),
+        "owner": Object {
+            "AddressOwner": String("0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497"),
+        },
+        "objectType": String("0x2::coin::Coin<0x2::sui::SUI>"),
+        "objectId": String("0x23b130490999dee73eac63410117b80c227caf819f897911477b43411460fb9a"),
+        "version": String("6"),
+        "previousVersion": String("5"),
+        "digest": String("H5SG8bZpZcwNKzte6FoiPrNLpoC9G4SPdQkomiAaGybC"),
+    },
+    Object {
+        "type": String("published"),
+        "packageId": String("0xac4d9c62091570a928124289bfed3bce5f4fd273cae6ef5d6fe341fd52533d1a"),
+        "version": String("1"),
+        "digest": String("58jVEWYqK2j3ffTua7Tp22sSpX8Hyt5F4vowfyhBgQyX"),
+        "modules": Array [
+            String("G5Game_core"),
+        ],
+    },
+    Object {
+        "type": String("created"),
+        "sender": String("0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497"),
+        "owner": Object {
+            "AddressOwner": String("0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497"),
+        },
+        "objectType": String("0xac4d9c62091570a928124289bfed3bce5f4fd273cae6ef5d6fe341fd52533d1a::G5Game_core::CasinoOwnership"),
+        "objectId": String("0xd7075159b1d2978d50c91591716d787b6deac942bb133b6e14da0eddb91533ff"),
+        "version": String("6"),
+        "digest": String("8iJ8YeFRVpFWtFv5y9Pmbi6Af1UVuwVhtq4h699JNo7v"),
+    },
+    Object {
+        "type": String("created"),
+        "sender": String("0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497"),
+        "owner": Object {
+            "Shared": Object {
+                "initial_shared_version": Number(6),
+            },
+        },
+        "objectType": String("0xac4d9c62091570a928124289bfed3bce5f4fd273cae6ef5d6fe341fd52533d1a::G5Game_core::Casino"),
+        "objectId": String("0xf0758770c3a1439e873975f5add81d215a3914fba6869b84965b4255bfaa6740"),
+        "version": String("6"),
+        "digest": String("9FBCbPH4RZBSqjrBCix64WgUdiYCBipM114eQLPyD9h6"),
+    },
+    Object {
+        "type": String("created"),
+        "sender": String("0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497"),
+        "owner": Object {
+            "AddressOwner": String("0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497"),
+        },
+        "objectType": String("0x2::package::UpgradeCap"),
+        "objectId": String("0xf280dafc26f5e622e2fcbe3707482cc3ce93a4704081e54130151849563aba2a"),
+        "version": String("6"),
+        "digest": String("Gkdt84VMCZpCxKNsW8EtJAJqEiG8fC17TyjSKQUAdJpR"),
+    },
+]
+----- Balance changes ----
+Array [
+    Object {
+        "owner": Object {
+            "AddressOwner": String("0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497"),
+        },
+        "coinType": String("0x2::sui::SUI"),
+        "amount": String("-22624280"),
+    },
+]
+
+
+
+Transaction failed
+Transaction failed with the following error. Error checking transaction input objects: IncorrectUserSignature { error: "Object 0x23b130490999dee73eac63410117b80c227caf819f897911477b43411460fb9a is owned by account address 0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497, but given owner/signer address is 0x8880d6431b5946dfb1d5c6dfa9295e800ac3f5c05171f7d2e42bcb9f966135f5" }
