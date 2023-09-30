@@ -8,15 +8,15 @@ import {
     formatSUI
   } from '@suiet/wallet-kit';
 import '@suiet/wallet-kit/style.css';
-import {TransactionBlock} from '@mysten/sui.js'
+import {TransactionBlock} from '@mysten/sui.js/transactions'
 import {useMemo} from "react";
 
 
 
 const Casino = new Map([
-  ['sui:devnet', '0xac4d9c62091570a928124289bfed3bce5f4fd273cae6ef5d6fe341fd52533d1a'],
-  ['sui:testnet', '0xac4d9c62091570a928124289bfed3bce5f4fd273cae6ef5d6fe341fd52533d1a'],
-  ['sui:mainnet', '0xac4d9c62091570a928124289bfed3bce5f4fd273cae6ef5d6fe341fd52533d1a'],
+  ['sui:devnet', '0xba11890eba9ff9c9a90101c7815515d2287a81b49810612b9fb630048b1c37e3'],
+  ['sui:testnet', '0xba11890eba9ff9c9a90101c7815515d2287a81b49810612b9fb630048b1c37e3'],
+  ['sui:mainnet', '0xba11890eba9ff9c9a90101c7815515d2287a81b49810612b9fb630048b1c37e3'],
 ])
 
 const App = () => {
@@ -32,6 +32,11 @@ const App = () => {
   }, [wallet]);
 
 console.log('casinoContractAddr', casinoContractAddr);
+
+const casinoAddress="0x5835e6527d7362c7665bf98bf9b18c550e634a815d064eef791bbbadb6c4d8cc";
+console.log('casinoAddress', casinoAddress);
+
+
 
 function uint8arrayToHex(value ) {
   if (!value) return ''
@@ -88,12 +93,12 @@ async function handleSignMsg() {
 
 
 
-async function refreshAccountObjects() {
-  const CREATION_FEE = 100 * 1e9;
-  console.log('refreshAccountObjects 0', wallet)
+async function DeposittoCasino() {
+  
+  console.log('DeposittoCasino 0', wallet)
   if (!wallet.account) return
-  console.log('refreshAccountObjects 1', wallet.getAccounts())
-  const target="0xba11890eba9ff9c9a90101c7815515d2287a81b49810612b9fb630048b1c37e3::G5Game_core::depositToCasino";
+  console.log('DeposittoCasino 1', wallet.getAccounts())
+  const target=casinoContractAddr+"::G5Game_core::depositToCasino";
 
     try {
     const tx = new TransactionBlock()
@@ -102,7 +107,7 @@ async function refreshAccountObjects() {
        tx.moveCall({
          target: target,
          arguments: [
-          tx.object("0x5835e6527d7362c7665bf98bf9b18c550e634a815d064eef791bbbadb6c4d8cc"),
+          tx.object(casinoAddress),
           coin
         ]
       });
@@ -288,7 +293,7 @@ const chainName = (chainId ) => {
                 <button onClick={() => handleExecuteMoveCall(casinoContractAddr)}>Call {chainName(wallet.chain?.id)} fct</button>
               )}
               <button onClick={handleSignMsg}>signMessage</button>
-              <button onClick={refreshAccountObjects}>Refresh Objects</button>
+              <button onClick={DeposittoCasino}>Deposit To Casino </button>
               <button onClick={callGamblefct}>Call Gamble</button>
             </div>
           </div>
