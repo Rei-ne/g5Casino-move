@@ -11,102 +11,55 @@ import '@suiet/wallet-kit/style.css';
 import { TransactionBlock } from '@mysten/sui.js/transactions'
 import { useMemo } from "react";
 
-const casinoAddress = "0xd38ef04815a13aab03ba910c2ab9b76426fc4136a7e04d71b5ee280559f083f9";
+import { SuiClient,getFullnodeUrl } from '@mysten/sui.js/client';
+
+const casinoAddress = "0x026c3a56cb7366f2e2422251fd7913c5536d98ea6327d8a1895fc29bf076412a";
 
 const Casino = new Map([
-  ['sui:devnet', '0x73a1b258359843f30effe1423f1bbf0863f10ec36a91aa92620d77ec8f299817'],
-  ['sui:testnet', '0x73a1b258359843f30effe1423f1bbf0863f10ec36a91aa92620d77ec8f299817'],
-  ['sui:mainnet', '0x73a1b258359843f30effe1423f1bbf0863f10ec36a91aa92620d77ec8f299817'],
+  ['sui:devnet', '0x1832f5488b99342a50a02a85e08e671cf5a8fe11085f1540b67377a7e21dc6d4'],
+  ['sui:testnet', '0x1832f5488b99342a50a02a85e08e671cf5a8fe11085f1540b67377a7e21dc6d4'],
+  ['sui:mainnet', '0x1832f5488b99342a50a02a85e08e671cf5a8fe11085f1540b67377a7e21dc6d4'],
 ])
 
+
+
+
 const App = () => {
+
+  const sui_client=new SuiClient({url:getFullnodeUrl('devnet')});
 
 
   const wallet = useWallet();
   let arrayAccountObjects = [];
-  const { balance } = useAccountBalance();
 
+  const { balance } = useAccountBalance();
+  
   const casinoContractAddr = useMemo(() => {
     if (!wallet.chain) return '';
     return Casino.get(wallet.chain.id) ?? '';
   }, [wallet]);
+
+
+
   // try to get casino balance
   const casinoBalance = useMemo(() => {
     if (!wallet.chain) return '';
     return Casino.get(wallet.balance) ?? '';
   }, [wallet]);
-  console.log('casinoContractAddr', casinoBalance);
-
   
+  
+  console.log('casinoContractAddr', casinoBalance);
   console.log('casinoAddress', casinoAddress);
 
-
-
-  function uint8arrayToHex(value) {
-    if (!value) return ''
-    return value.toString('hex')
-  }
-
-
-  async function handleExecuteMoveCall(target) {
-    if (!target) return;
-
-    try {
-      const tx = new TransactionBlock()
-      tx.moveCall({
-        target: target,
-        arguments: [
-          tx.pure('Suiet NFT'),
-          tx.pure('Suiet Sample NFT'),
-          tx.pure('https://xc6fbqjny4wfkgukliockypoutzhcqwjmlw2gigombpp2ynufaxa.arweave.net/uLxQwS3HLFUailocJWHupPJxQsli7aMgzmBe_WG0KC4')
-        ]
-      })
-      const resData = await wallet.signAndExecuteTransactionBlock({
-        transactionBlock: tx,
-      });
-      console.log('executeMoveCall success', resData);
-      alert('executeMoveCall succeeded (see response in the console)');
-    } catch (e) {
-      console.error('executeMoveCall failed', e);
-      alert('executeMoveCall failed (see response in the console)');
-    }
-  }
-
-
-  async function handleSignMsg() {
-    if (!wallet.account) return
-    try {
-      const msg = 'Hello world!'
-      const msgBytes = new TextEncoder().encode(msg)
-      const result = await wallet.signMessage({
-        message: msgBytes
-      })
-      const verifyResult = await wallet.verifySignedMessage(result, wallet.account.publicKey)
-      console.log('verify signedMessage', verifyResult)
-      if (!verifyResult) {
-        alert(`signMessage succeed, but verify signedMessage failed`)
-      } else {
-        alert(`signMessage succeed, and verify signedMessage succeed!`)
-      }
-    } catch (e) {
-      console.error('signMessage failed', e)
-      alert('signMessage failed (see response in the console)')
-    }
-  }
-
-
-
-
   async function DeposittoCasino() {
-
     console.log('DeposittoCasino 0', wallet)
     if (!wallet.account) return
     console.log('DeposittoCasino 1', wallet.getAccounts())
     const target = casinoContractAddr + "::G5Game_core::depositToCasino";
-
     try {
       const tx = new TransactionBlock()
-      const coin = tx.splitCoins(tx.gas, [tx.pure(500000000)]);
+      //split 1 sui to coin
+      const coin = tx.splitCoins(tx.gas, [tx.pure(1000000000)]);  
       tx.setGasBudget(100000000);
       tx.moveCall({
         target: target,
@@ -116,42 +69,24 @@ const App = () => {
         ]
       });
 
-
-
       const resData = await wallet.signAndExecuteTransactionBlock({
         transactionBlock: tx,
       });
       console.log('executeMoveCall success', resData);
-      //  alert('executeMoveCall succeeded (see response in the console)');
     } catch (e) {
       console.error('executeMoveCall failed', e);
-      //  alert('executeMoveCall failed (see response in the console)');
     }
   }
 
 
-const chainName = (chainId ) => {
-    switch (chainId) {
-      case SuiChainId.MAIN_NET:
-        return 'Mainnet'
-      case SuiChainId.TEST_NET:
-        return 'Testnet'
-      case SuiChainId.DEV_NET:
-        return 'Devnet'
-      default:
-        return 'Unknown'
-    }
-  }
 
 
   async function callGamblefct() {
-    
     console.log('callGamblefct 0', wallet)
     if (!wallet.account) return
     console.log('callGamblefct 1', wallet.getAccounts())
-    
+
     const target=casinoContractAddr+"::G5Game_core::gamble";
-  
     try {
       const tx = new TransactionBlock()
       const coin = tx.splitCoins(tx.gas, [tx.pure(10000000)]);
@@ -163,20 +98,77 @@ const chainName = (chainId ) => {
             coin
           ]
         });
-         
-  
         const resData = await wallet.signAndExecuteTransactionBlock({
           transactionBlock: tx,
         });
         console.log('executeMoveCall success', resData);
-      //  alert('executeMoveCall succeeded (see response in the console)');
       } catch (e) {
         console.error('executeMoveCall failed', e);
-      //  alert('executeMoveCall failed (see response in the console)');
       }
     }
-  
 
+    async function callPastEvents(){
+      const past_events=await sui_client.queryEvents({
+        query:  {Sender:wallet.account.address},
+        //filter:{Sender:'0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497'},
+        limit:5,
+      });
+      console.log('past_events',past_events);
+    }
+
+
+
+
+    
+  async function subscribeEvents(){  //should be called in useEffect ?
+
+    //const myEventFilter={MoveModule:{ package: casinoContractAddr ,module:'g5Game_core'},};
+    //const myEventFilter={MoveModule:{ package: casinoContractAddr ,module:'g5Game_core'},};
+ 
+    
+    const mysub=await sui_client.subscribeEvent({
+      filter:  {Sender:wallet.account.address},
+      onMessage(event){
+        console.log('event',event);
+      },
+    });
+
+
+
+    }
+
+    async function unsubscribeEvents(){
+      sui_client.unsubscribeEvent();
+    }
+
+
+async function callCasinoBalance(){
+
+  const wallet_bal = await sui_client.getBalance({
+    owner: wallet.account.address,
+  });
+
+  console.log('wallet_bal',wallet_bal,'address',wallet.account.address);
+
+  const casino_bal = await sui_client.getCoins({
+    owner: casinoAddress,
+  });
+
+  console.log('casinoBalance',casino_bal,'address',casinoAddress);
+
+
+  const rpcVersion = await sui_client.getRpcApiVersion();
+
+  console.log('getRpcApiVersion',rpcVersion);
+
+const myObjetcCasino=await sui_client.getObject({owner:casinoAddress});
+
+console.log('myObjetcCasino',myObjetcCasino);
+
+  // const balance=await sui_client.queryBalance({
+  //   address:casinoAddress,
+  // });
+}
 
   return (
     <>
@@ -229,6 +221,8 @@ const chainName = (chainId ) => {
             <div className='btn-group'>
               <button className="action-btn" onClick={DeposittoCasino}>Deposit To Casino</button>
               <button className="action-btn" onClick={callGamblefct}>Call Gamble</button>
+              <button className="action-btn" onClick={callPastEvents}>Call PastEvents</button>
+              <button className="action-btn" onClick={callCasinoBalance}>Call CasinoBal</button>
             </div>
           </div>
         )}

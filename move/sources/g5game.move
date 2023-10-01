@@ -15,27 +15,17 @@ module g5game::G5Game_core {
     const ENotEnoughMoney: u64 = 1;
     const EOutOfService: u64 = 2;
 
-  const EInvalidStakeAmount: u64 = 0;
+    const EInvalidStakeAmount: u64 = 0;
     const EInvalidGuess: u64 = 1;
     const EInvalidBlsSig: u64 = 2;
-    const EKioskItemNotFound: u64 = 3;
-    const ECannotChallenge: u64 = 4;
-    const EInvalidFeeRate: u64 = 5;
-    const EPoolNotEnough: u64 = 6;
-    const EGameNotExists: u64 = 7;
-    const EBatchSettleInvalidInputs: u64 = 8;
-
-
-
-
-
+    const EPoolNotEnough: u64 = 3;
+    
 
     /// Max multiplier for someone to win. e.g. max gains of this casino is cost_per_agem * 1000 (5000*1000 = 5000000)
     const MaxWinningsMultiplier: u64 = 5;
 
     /// max amount of combinations (we have a spinner of 5 elements (4+0)
     const AmountOfCombinations: u8 = 4;
-
 
     struct Casino has key, store{
         id: UID,
@@ -58,6 +48,11 @@ module g5game::G5Game_core {
         slot_3: u8
     }
 
+      struct ProfitsCollected has copy, drop {
+        amount: u64
+    }
+
+
     // initialize our G5Game
     fun init(ctx: &mut TxContext) {
 
@@ -79,10 +74,6 @@ module g5game::G5Game_core {
     public fun cost_per_game(self: &Casino): u64 {
         self.cost_per_game
     }
-
-
-  
-
 
     public fun casino_balance(self:  &Casino): u64{
        balance::value<SUI>(&self.casino_balance)
@@ -108,20 +99,14 @@ module g5game::G5Game_core {
         // );
         let stake = coin::into_balance(wallet);
         // house place the stake
-      
-       
+             
         assert!(casino_balance(casino) >= stake_amount, EPoolNotEnough);
 
         let house_stake = balance::split(&mut casino.casino_balance, stake_amount);
-        balance::join(&mut stake, house_stake);
-
-
-
-
-
-         balance::join(&mut casino.casino_balance, stake);  // so nasty 100% back to casino 
-      
-
+        //  the house matches the stake in the pot (stake)
+        balance::join(&mut stake, house_stake);            
+        // so nasty 100% back to casino this helped for debug has stake cannot be left  without drop
+        balance::join(&mut casino.casino_balance, stake);  
 
         // get balance reference
        // let wallet_balance = coin::balance_mut(wallet);
@@ -153,7 +138,11 @@ module g5game::G5Game_core {
             // let coin = coin::take(&mut casino.casino_balance, winnings, ctx);
             // transfer::public_transfer(coin, tx_context::sender(ctx));
                 //or for testing
+            
+            let win_amount =  2*stake_amount;
 
+            event::emit(ProfitsCollected {amount: win_amount });
+            //we pay the winner 2 times the stake
              let coin = coin::take(&mut casino.casino_balance, 2*stake_amount, ctx);
              transfer::public_transfer(coin, tx_context::sender(ctx));
 
