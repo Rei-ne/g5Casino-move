@@ -45,7 +45,10 @@ module g5game::G5Game_core {
         gambler: address,
         slot_1: u8,
         slot_2: u8,
-        slot_3: u8
+        slot_3: u8,
+        slot_4: u8,
+        slot_5: u8,
+        slot_6: u8
     }
 
       struct ProfitsCollected has copy, drop {
@@ -127,26 +130,284 @@ module g5game::G5Game_core {
         let slot_1 = *vector::borrow(&randomNums, 0);
         let slot_2 = *vector::borrow(&randomNums, 1);
         let slot_3 = *vector::borrow(&randomNums, 2);
+         let slot_4 = *vector::borrow(&randomNums, 3);
+        let slot_5 = *vector::borrow(&randomNums, 4);
+        let slot_6 = *vector::borrow(&randomNums, 5);
+
+        //possible couples of numbers cases
+          let _ambo1 = false;
+        let _ambo2 = false;
+        let _ambo3 = false;
+        let _ambo4 = false;
+        let _ambo5 = false;
+        let _ambo6 = false;
+        
+        //possible double couples of numbers cases: for example the occurrence of 2 couples of 2 differen numbers that are ugual
+        let _doubleBIS = false;
+        //possible tris of numbers cases
+        let _tris = false;
+        // no ugual numbers occurred, NO WINNING
+        let _NOwinning=false;
 
 
-        //if(slot_1 == slot_2 && slot_2 == slot_3){
-        {
-
+        //TODO maybe I'll semplify the code with !assert - later or something else
+            //ugual couple with slot1
+      if(slot_1 == slot_2 || slot_1 == slot_3 || slot_1 == slot_4 || slot_1 == slot_5 || slot_1 == slot_6){ 
+            let _ambo1 = true;
             
-            // add winnings to user's wallet
-            // winnings = casino.cost_per_game * 3; // calculate winnings + the money the user spent.
-            // let coin = coin::take(&mut casino.casino_balance, winnings, ctx);
-            // transfer::public_transfer(coin, tx_context::sender(ctx));
-                //or for testing
+            //ugual couple with slot2
+        }else if(slot_2 == slot_1 || slot_2 == slot_3 || slot_2 == slot_4 || slot_2 == slot_5 || slot_2 == slot_6){
+             _ambo2 = true;
+            //ugual couple with slot3
+        }else if(slot_3 == slot_1 || slot_3 == slot_2 || slot_3 == slot_4 || slot_3 == slot_5 || slot_3 == slot_6){
+             _ambo3 = true;
+            //ugual couple with slot4
+        }else if(slot_4 == slot_1 || slot_4 == slot_3 || slot_4 == slot_2 || slot_4 == slot_5 || slot_4 == slot_6){
+             _ambo3 = true;
+            //ugual couple with slot5
+        }else if(slot_5 == slot_1 || slot_5 == slot_2 || slot_5 == slot_4 || slot_5 == slot_3 || slot_5 == slot_6){
+             _ambo4 = true;
+            //ugual couple with slot6
+        }else if(slot_6 == slot_1 || slot_6 == slot_2 || slot_6 == slot_4 || slot_6 == slot_3 || slot_6 == slot_5){
+             _ambo5 = true;
+            //closing IF TODO-  ahead
+        }
+
+
+        else if(
+            // slot 1=slot2=slot3
+            (slot_1 == slot_2  && slot_2 == slot_3  )
+        
+            || 
+            // slot1=slot3=slot4
+            (slot_1 == slot_3  && slot_3== slot_4 )
+            ||
+            // slot1=slot4=slot2
+            (slot_1 == slot_4  &&  slot_4 == slot_2 )
+
+            ||
+            // slot1=slot4=slot5
+            (slot_1 == slot_4  && slot_4 == slot_5 ) 
+            ||
+            // slot1=slot4=slot6
+            (slot_1 == slot_4  && slot_4 == slot_6 ) 
+           
+            ||
+            // slot2=slot3=slot4
+            (slot_2 == slot_3  && slot_3 == slot_4 ) 
+            ||
+            // slot2=slot3=slot5
+            (slot_2 == slot_3  && slot_3 == slot_5 )
+            ||
+            // slot2=slot3=slot6
+            (slot_2 == slot_3  && slot_3 == slot_6 )
+            ||
+           
+            // slot3=slot4=slot5
+            (slot_3 == slot_3  && slot_3 == slot_6 )
+            ||
+            // slot3=slot4=slot6
+            (slot_3 == slot_4  && slot_4 == slot_6 )
+            ||
+            // slot4=slot5=slot6
+            (slot_4 == slot_5  && slot_5 == slot_6 )
+
+            )
+            {
+               let _tris=true;
+            };
+
+
+ // UNCOMPLETE CODE WORK IN PROGRESS 
+     //TODO DOUBLE COUPLES AND DOUBLES TRIS OF UGUAL NUMBERS OCCURRING
+     // TODO DIFFERENT WINNINGS FOR DIFFERENT CASES: 1 COUPLE, 2 COUPLES, 1 TRIS, 2 TRIS
+   if ( _ambo1 == true || _ambo2 == true || _ambo3 == true || _ambo4 == true || _ambo5 == true|| _ambo6 == true){
+        //
+
+
+           let win_amount =  1*stake_amount;
+            winnings=win_amount;
+            event::emit(ProfitsCollected {amount: win_amount });
+            //we pay the winner 2 times the stake
+             let coin = coin::take(&mut casino.casino_balance, 2*stake_amount, ctx);
+             transfer::public_transfer(coin, tx_context::sender(ctx));
+
+
+    //case at least 1 tris of numbers are ugual
+    }else if(_tris == true){
+            
             
             let win_amount =  2*stake_amount;
+            winnings=win_amount;
+            event::emit(ProfitsCollected {amount: win_amount });
+            //we pay the winner 2 times the stake
+             let coin = coin::take(&mut casino.casino_balance, 2*stake_amount, ctx);
+             transfer::public_transfer(coin, tx_context::sender(ctx));
 
+        
+        //case ALL numbers are ugual     
+    }else if(slot_1 == slot_2 && slot_1 == slot_3 && slot_1 == slot_4 && slot_1 == slot_5 && slot_1 == slot_6){
+           
+            let win_amount =  10*stake_amount;
+            winnings=win_amount;
+            event::emit(ProfitsCollected {amount: win_amount });
+            //we pay the winner 2 times the stake
+             let coin = coin::take(&mut casino.casino_balance, 2*stake_amount, ctx);
+             transfer::public_transfer(coin, tx_context::sender(ctx));
+
+
+    
+
+    //TODO THERE's a bug to fix it could occur 
+    //1 couple of ugual numbers are counted 2 times 
+    //as they were 2 couples instead it'a one only
+    //TO DO: EXCLUDE that case
+
+    //the case 2 couple of numbers occurring    
+    }else if (
+
+           // 2 couples where one occures with slot_1
+
+           (_ambo1 == true && _ambo2 == true  ) 
+            ||
+           (_ambo1 == true && _ambo3 == true  ) 
+           ||
+           (_ambo1 == true && _ambo4 == true  ) 
+            ||
+           (_ambo1 == true && _ambo5 == true  ) 
+           ||
+           (_ambo1 == true && _ambo6 == true  ) 
+
+            ||
+
+           // 2 couples where one occures with slot_1
+
+           (_ambo2 == true && _ambo1 == true  ) 
+            ||
+           (_ambo2 == true && _ambo3 == true  ) 
+           ||
+           (_ambo2 == true && _ambo4 == true  ) 
+            ||
+           (_ambo2 == true && _ambo5 == true  ) 
+           ||
+           (_ambo2 == true && _ambo6 == true  ) 
+
+           ||
+
+           // 2 couples where one occures with slot_2
+
+           (_ambo2 == true && _ambo1 == true  ) 
+            ||
+           (_ambo2 == true && _ambo3 == true  ) 
+           ||
+           (_ambo2 == true && _ambo4 == true  ) 
+            ||
+           (_ambo2 == true && _ambo5 == true  ) 
+           ||
+           (_ambo2 == true && _ambo6 == true  ) 
+
+
+           ||
+
+           // 2 couples where one occures with slot_3
+
+           (_ambo3 == true && _ambo1 == true  ) 
+            ||
+           (_ambo3 == true && _ambo2 == true  ) 
+           ||
+           (_ambo3 == true && _ambo4 == true  ) 
+            ||
+           (_ambo3 == true && _ambo5 == true  ) 
+           ||
+           (_ambo3 == true && _ambo6 == true  ) 
+
+            ||
+           // 2 couples where one occures with slot_4
+
+           (_ambo4 == true && _ambo1 == true  ) 
+            ||
+           (_ambo4 == true && _ambo2 == true  ) 
+           ||
+           (_ambo4 == true && _ambo3 == true  ) 
+            ||
+           (_ambo4 == true && _ambo5 == true  ) 
+           ||
+           (_ambo4 == true && _ambo6 == true  ) 
+
+
+            ||
+           // 2 couples where one occures with slot_5
+
+           (_ambo5 == true && _ambo1 == true  ) 
+            ||
+           (_ambo5 == true && _ambo2 == true  ) 
+           ||
+           (_ambo5 == true && _ambo3 == true  ) 
+            ||
+           (_ambo5 == true && _ambo4 == true  ) 
+           ||
+           (_ambo5 == true && _ambo6 == true  ) 
+
+
+            ||
+           // 2 couples where one occures with slot_6
+
+           (_ambo6 == true && _ambo1 == true  ) 
+            ||
+           (_ambo6 == true && _ambo2 == true  ) 
+           ||
+           (_ambo6 == true && _ambo3 == true  ) 
+            ||
+           (_ambo6 == true && _ambo4 == true  ) 
+           ||
+           (_ambo6 == true && _ambo5 == true  ) 
+    ){
+         let _doubleBIS = true;
+
+           {
+            let win_amount =  10*stake_amount;
+            winnings=win_amount;
             event::emit(ProfitsCollected {amount: win_amount });
             //we pay the winner 2 times the stake
              let coin = coin::take(&mut casino.casino_balance, 2*stake_amount, ctx);
              transfer::public_transfer(coin, tx_context::sender(ctx));
 
         };
+    
+    }else if(slot_1 != slot_2 && slot_1 != slot_3 && slot_1 != slot_4 && slot_1 != slot_5 && slot_1 != slot_6){
+            let _NOwinning=true;
+            
+
+
+    }else{
+           {
+            let win_amount =  5*stake_amount;
+            winnings=win_amount;
+            event::emit(ProfitsCollected {amount: win_amount });
+            //we pay the winner 2 times the stake
+             let coin = coin::take(&mut casino.casino_balance, 2*stake_amount, ctx);
+             transfer::public_transfer(coin, tx_context::sender(ctx));
+
+        };
+            // add winnings to user's wallet
+    };
+
+
+
+        
+
+        // if(slot_1 == slot_2 && slot_2 == slot_3)
+        // {
+        //     let win_amount =  5*stake_amount;
+        //     winnings=win_amount;
+        //     event::emit(ProfitsCollected {amount: win_amount });
+        //     //we pay the winner 2 times the stake
+        //      let coin = coin::take(&mut casino.casino_balance, 2*stake_amount, ctx);
+        //      transfer::public_transfer(coin, tx_context::sender(ctx));
+
+        // };
+
+
 
         // emit event
         event::emit( GambleEvent{
@@ -155,7 +416,10 @@ module g5game::G5Game_core {
             winnings,
             slot_1,
             slot_2,
-            slot_3
+            slot_3,
+            slot_4,
+            slot_5,
+            slot_6,
         });
         // delete unused id
         object::delete(uid);
@@ -210,7 +474,6 @@ public entry fun depositToCasino( casino :&mut Casino,payment:  Coin<SUI>){
     */
 
     fun pseudoRandomNumGenerator(uid: &UID):vector<u8>{
-
         // create random ID
         let random = object::uid_to_bytes(uid);
         let vec = vector::empty<u8>();
@@ -219,7 +482,9 @@ public entry fun depositToCasino( casino :&mut Casino,payment:  Coin<SUI>){
         vector::push_back(&mut vec, (*vector::borrow(&random, 0) as u8) % AmountOfCombinations);
         vector::push_back(&mut vec, (*vector::borrow(&random, 1) as u8) % AmountOfCombinations);
         vector::push_back(&mut vec, (*vector::borrow(&random, 2) as u8) % AmountOfCombinations);
-
+        vector::push_back(&mut vec, (*vector::borrow(&random, 3) as u8) % AmountOfCombinations);
+        vector::push_back(&mut vec, (*vector::borrow(&random, 4) as u8) % AmountOfCombinations);
+        vector::push_back(&mut vec, (*vector::borrow(&random, 5) as u8) % AmountOfCombinations);
         vec
     }
 

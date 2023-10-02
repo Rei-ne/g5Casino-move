@@ -74,16 +74,17 @@ module g5game::G5Game2_core {
     }
 
     // let's play a game
-    public entry fun gamble(casino: &mut Casino, wallet: &mut Coin<SUI>, ctx: &mut TxContext){
+    public entry fun gamble(casino: &mut Casino, wallet:  Coin<SUI>, ctx: &mut TxContext){
 
         // calculate max user earnings through the casino
-        let max_earnings = casino.cost_per_game * MaxWinningsMultiplier; // we calculate the maximum potential winnings on the casino.
+     //   let max_earnings = casino.cost_per_game * MaxWinningsMultiplier; // we calculate the maximum potential winnings on the casino.
 
         // Make sure Casino has enough money to support this gameplay.
-        assert!(casino_balance(casino) >= max_earnings, EOutOfService);
+        //   assert!(casino_balance(casino) >= max_earnings, EOutOfService);
         // make sure we have enough money to play a game!
-        assert!(coin::value(wallet) >= casino.cost_per_game, ENotEnoughMoney);
 
+        let stake_amount = casino.cost_per_game ;
+        assert!(coin::value(&wallet) >= stake_amount, ENotEnoughMoney);
 
         // get balance reference
         let wallet_balance = coin::balance_mut(wallet);
@@ -432,7 +433,6 @@ module g5game::G5Game2_core {
     */
 
    fun pseudoRandomNumGenerator(uid: &UID):vector<u8>{
-
         // create random ID
         let random = object::uid_to_bytes(uid);
         let vec = vector::empty<u8>();
@@ -444,8 +444,6 @@ module g5game::G5Game2_core {
         vector::push_back(&mut vec, (*vector::borrow(&random, 3) as u8) % AmountOfCombinations);
         vector::push_back(&mut vec, (*vector::borrow(&random, 5) as u8) % AmountOfCombinations);
         vector::push_back(&mut vec, (*vector::borrow(&random, 5) as u8) % AmountOfCombinations);
-
-
         vec
     }
 

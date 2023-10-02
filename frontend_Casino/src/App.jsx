@@ -13,12 +13,12 @@ import { useMemo } from "react";
 
 import { SuiClient,getFullnodeUrl } from '@mysten/sui.js/client';
 
-const casinoAddress = "0x026c3a56cb7366f2e2422251fd7913c5536d98ea6327d8a1895fc29bf076412a";
+const casinoAddress = "0x0c2128e6e9bc456bded7ba30441b23173e9a873db3563f52cac1469e6e964dac";
 
 const Casino = new Map([
-  ['sui:devnet', '0x1832f5488b99342a50a02a85e08e671cf5a8fe11085f1540b67377a7e21dc6d4'],
-  ['sui:testnet', '0x1832f5488b99342a50a02a85e08e671cf5a8fe11085f1540b67377a7e21dc6d4'],
-  ['sui:mainnet', '0x1832f5488b99342a50a02a85e08e671cf5a8fe11085f1540b67377a7e21dc6d4'],
+  ['sui:devnet', '0xcfbe9730ce848436481b198060b8abe309f9d012bea8c068ce4cde5b3687335d'],
+  ['sui:testnet', '0xcfbe9730ce848436481b198060b8abe309f9d012bea8c068ce4cde5b3687335d'],
+  ['sui:mainnet', '0xcfbe9730ce848436481b198060b8abe309f9d012bea8c068ce4cde5b3687335d'],
 ])
 
 
@@ -113,26 +113,23 @@ const App = () => {
         //filter:{Sender:'0x4651a914db63a612ea1fb775a6cb3c04439470279175556b45a8def3d0582497'},
         limit:5,
       });
-      console.log('past_events',past_events);
+      console.log('past_events for that sender',past_events);
+      
+    
+
+
     }
-
-
-
-
     
-  async function subscribeEvents(){  //should be called in useEffect ?
-
+  async function subscribeEvents(){  //should be called
     //const myEventFilter={MoveModule:{ package: casinoContractAddr ,module:'g5Game_core'},};
     //const myEventFilter={MoveModule:{ package: casinoContractAddr ,module:'g5Game_core'},};
- 
-    
+     
     const mysub=await sui_client.subscribeEvent({
       filter:  {Sender:wallet.account.address},
       onMessage(event){
-        console.log('event',event);
+   //     console.log('event',event);
       },
     });
-
 
 
     }
@@ -161,9 +158,9 @@ async function callCasinoBalance(){
 
   console.log('getRpcApiVersion',rpcVersion);
 
-const myObjetcCasino=await sui_client.getObject({owner:casinoAddress});
+ const myObjetcCasino=await sui_client.getOwnedObjects({owner:wallet.account.address});
 
-console.log('myObjetcCasino',myObjetcCasino);
+ console.log('myObjetcCasino',myObjetcCasino);
 
   // const balance=await sui_client.queryBalance({
   //   address:casinoAddress,
