@@ -163,25 +163,25 @@ module g5game::G5Game2_core {
             ||
             // slot1=slot4=slot6
             (slot_1 == slot_4  && slot_4 == slot_6 ) 
-            /// ////////////////////
+            //  /////////////////////
             ||
             // slot2=slot3=slot4
             (slot_2 == slot_3  && slot_3 == slot_4 ) 
             ||
-            /// /// slot2=slot3=slot5
+            //  //// slot2=slot3=slot5
             (slot_2 == slot_3  && slot_3 == slot_5 )
             ||
-            /// /// slot2=slot3=slot6
+            //  /// slot2=slot3=slot6
             (slot_2 == slot_3  && slot_3 == slot_6 )
             ||
             /////////////////////////////////
-            /// /// slot3=slot4=slot5
+            //  //// slot3=slot4=slot5
             (slot_3 == slot_3  && slot_3 == slot_6 )
             ||
-            /// /// slot3=slot4=slot6
+            //  //// slot3=slot4=slot6
             (slot_3 == slot_4  && slot_4 == slot_6 )
             ||
-            /// /// slot4=slot5=slot6
+            //  //// slot4=slot5=slot6
             (slot_4 == slot_5  && slot_5 == slot_6 )
 
             )
@@ -223,6 +223,7 @@ module g5game::G5Game2_core {
     //as they were 2 couples instead it'a one only
     //TO DO: EXCLUDE that case
 
+/*
     //the case 2 couple of numbers occurring    
     }else if (
 
@@ -328,6 +329,9 @@ module g5game::G5Game2_core {
             let payment = balance::split(&mut casino.casino_balance, winnings); // get from casino's balance.
             balance::join(coin::balance_mut(wallet), payment); // add to user's wallet!
     
+
+    */ 
+
     }else if(slot_1 != slot_2 && slot_1 != slot_3 && slot_1 != slot_4 && slot_1 != slot_5 && slot_1 != slot_6){
             let _NOwinning=true;
             
